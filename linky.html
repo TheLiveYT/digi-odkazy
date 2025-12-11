@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Odkazy</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f7f7f7;
+        }
+        .category-btn, .image-btn {
+            display: block;
+            width: 250px;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 15px;
+        }
+        .category-btn {
+            background: #e0e0e0;
+        }
+        .category-btn:hover {
+            background: #d5d5d5;
+        }
+        .image-btn {
+            background: #ffffff;
+            border: 1px solid #ccc;
+        }
+        .image-btn:hover {
+            background: #f0f0f0;
+        }
+        .category-content {
+            margin-left: 20px;
+            display: none;
+        }
+
+        /* Media viewer */
+        #viewer {
+            display: none;
+            margin-top: 25px;
+        }
+        #viewer video, #viewer img, #viewer iframe {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.15);
+        }
+        #backBtn {
+            margin-bottom: 15px;
+            padding: 8px 14px;
+            background: #ccc;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        #backBtn:hover {
+            background: #bbb;
+        }
+    </style>
+
+    <script>
+        function toggle(id) {
+            const el = document.getElementById(id);
+            const current = el.style.display === "" ? "none" : el.style.display;
+            el.style.display = current === "none" ? "block" : "none";
+        }
+
+        function normalizeDiscordURL(url) {
+            if (url.includes("cdn.discordapp.com")) {
+                return url.replace("cdn.discordapp.com", "media.discordapp.net");
+            }
+            return url;
+        }
+
+        function isOneDrive(url) {
+            return url.includes("sharepoint.com") || url.includes("onedrive.live.com");
+        }
+
+        function extractOneDriveEmbed(url) {
+            if (url.includes("embed.aspx")) return url;
+            return url + "&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Atrue%7D";
+        }
+
+        function openMedia(url) {
+            url = normalizeDiscordURL(url);
+
+            // Hide categories
+            document.querySelectorAll(".category-btn, .category-content, h1")
+                .forEach(e => e.style.display = "none");
+
+            const viewer = document.getElementById("viewer");
+            const video = document.getElementById("viewerVideo");
+            const img = document.getElementById("viewerImg");
+            const iframe = document.getElementById("viewerFrame");
+
+            // reset
+            video.style.display = "none";
+            img.style.display = "none";
+            iframe.style.display = "none";
+            video.pause();
+            video.src = "";
+            img.src = "";
+            iframe.src = "";
+
+            if (isOneDrive(url)) {
+                iframe.src = extractOneDriveEmbed(url);
+                iframe.style.display = "block";
+            } else if (url.endsWith(".mp4")) {
+                video.src = url;
+                video.style.display = "block";
+                video.play();
+            } else {
+                img.src = url;
+                img.style.display = "block";
+            }
+
+            viewer.style.display = "block";
+        }
+
+        function backToMenu() {
+            document.getElementById("viewer").style.display = "none";
+            document.querySelectorAll(".category-btn, .category-content, h1")
+                .forEach(e => e.style.display = "block");
+            document.getElementById("viewerVideo").pause();
+        }
+    </script>
+</head>
+
+<body>
+
+<h1>Odkazy</h1>
+
+<!-- Kategorie 1 -->
+<button class="category-btn" onclick="toggle('cat1')">1. Gantův Chart</button>
+<div id="cat1" class="category-content">
+    <button class="image-btn" onclick="window.open('https://docs.google.com/spreadsheets/d/1niIIbNABUMlbP-pAsOoMxuZbSuUlZzmflkutbNqgfWA/edit?usp=sharing')">Odkaz</button>
+</div>
+
+<!-- Kategorie 2 -->
+<button class="category-btn" onclick="toggle('cat2')">2. Model postavy</button>
+<div id="cat2" class="category-content">
+    <button class="image-btn" onclick="openMedia('https://media.discordapp.net/attachments/1408904444594356355/1448700378303697056/image.png?ex=693c36dd&is=693ae55d&hm=731ccc294aa551cd8d7817da096dc9f5137a4b8d3996ee555a59df22567b90fd&=&format=webp&quality=lossless')">Obrázek 1</button>
+    <button class="image-btn" onclick="openMedia('https://media.discordapp.net/attachments/1408904444594356355/1448700392039776348/image.png?ex=693c36e1&is=693ae561&hm=1d2f9ae599f142c6cee237a1db5d97a2fbb1c428e8de8f1f258412bb89261196&=&format=webp&quality=lossless')">Obrázek 2</button>
+    <button class="image-btn" onclick="openMedia('https://media.discordapp.net/attachments/1408904444594356355/1448700411782627569/image.png?ex=693c36e5&is=693ae565&hm=2fb2bedba547818068e12e270cca6b734b7420ff2d72817f1517c76c40a24642&=&format=webp&quality=lossless')">Obrázek 3</button>
+    <button class="image-btn" onclick="openMedia('https://ghbcz-my.sharepoint.com/personal/2030avanek_ghb_cz/_layouts/15/embed.aspx?UniqueId=11c9eb63-e203-48bc-8c5c-103e3d519fad')">Video 1</button>
+</div>
+
+<!-- Kategorie 3 -->
+<button class="category-btn" onclick="toggle('cat3')">3. Model enemáka</button>
+<div id="cat3" class="category-content">
+    <button class="image-btn" onclick="openMedia('https://media.discordapp.net/attachments/1408904444594356355/1448697994823340124/image.png?ex=693c34a5&is=693ae325&hm=403db4cd375e9fac5974a3a5d70c7c003b24dac54d12495458d3444a5c043371&=&format=webp&quality=lossless')">Obrázek 1</button>
+    <button class="image-btn" onclick="openMedia('https://media.discordapp.net/attachments/1408904444594356355/1448697995187978360/image.png?ex=693c34a5&is=693ae325&hm=f1f34d2595c8850cd7e0c76262b8928b2f2fcc22bc73d7b6cb2d61deffe6a106&=&format=webp&quality=lossless')">Obrázek 2</button>
+    <button class="image-btn" onclick="openMedia('https://media.discordapp.net/attachments/1408904444594356355/1448697995536367647/image.png?ex=693c34a5&is=693ae325&hm=a30191b23b171101dbcc2cf8b769fc10505181bfbba6085af8063f691684e0fb&=&format=webp&quality=lossless')">Obrázek 3</button>
+</div>
+
+
+
+<!-- Viewer -->
+<div id="viewer">
+    <button id="backBtn" onclick="backToMenu()">⬅ Zpět</button>
+    <br>
+    <video id="viewerVideo" controls></video>
+    <img id="viewerImg">
+    <iframe id="viewerFrame" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+</div>
+
+</body>
+</html>
